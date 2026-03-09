@@ -1,10 +1,10 @@
-# Entorno virtual
+# Virtual environment
 venv/
 env/
 ENV/
 .venv
 
-# Archivo de configuración con token
+# Configuration with token (local only)
 .env
 .env.local
 

@@ -2,6 +2,18 @@
 
 Fast and safe Python script to unfollow all users you follow on GitHub. Uses **multithreading** to speed up the process while respecting API rate limits.
 
+**📦 Published on Docker Hub:** https://hub.docker.com/r/venanciofuentes/github-unfollow
+
+## One-Liner Quickstart
+
+No installation, no cloning, just Docker:
+
+```bash
+docker run --rm -i -e GITHUB_TOKEN=ghp_ABC123xyz venanciofuentes/github-unfollow
+```
+
+Replace `ghp_ABC123xyz` with your GitHub token. That's it!
+
 ## Features
 
 ✨ **Key Features:**
@@ -14,13 +26,33 @@ Fast and safe Python script to unfollow all users you follow on GitHub. Uses **m
 
 ## Quick Start
 
-### 1. Clone/Setup the project
+### Option 1: Docker (Fastest - No Setup Required!)
+
+**Already published on Docker Hub!** https://hub.docker.com/r/venanciofuentes/github-unfollow
+
+Just run:
 
 ```bash
-cd github-unfollow
+# Pass your GitHub token directly
+docker run --rm -i -e GITHUB_TOKEN=ghp_ABC123xyz venanciofuentes/github-unfollow
+
+# Or with .env file
+docker run --rm -i --env-file .env venanciofuentes/github-unfollow
 ```
 
-### 2. Create virtual environment
+**Or from Docker Compose:**
+
+```bash
+docker compose run --rm unfollow
+```
+
+That's it! No cloning, no setup, no venv. Just Docker.
+
+---
+
+### Option 2: Local Installation (Best for Development)
+
+#### 1. Create virtual environment
 
 **Windows (PowerShell):**
 ```bash
@@ -36,14 +68,61 @@ python -m venv venv
 pip install -r requirements.txt
 ```
 
-**Linux/macOS:**
+**Linux/macOS (manual):**
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 3. Get your GitHub Token
+#### 2. Configure your token
+
+Create a `.env` file:
+```bash
+cp .env.example .env
+```
+
+Edit `.env` and paste your GitHub token:
+```env
+GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+#### 3. Run the script
+
+**Local:**
+```bash
+# With venv activated
+python unfollow.py
+
+# Or using helper script (Linux/macOS)
+./unfollow.sh local
+```
+
+---
+
+
+**Step 1: Clone the repository**
+
+```bash
+git clone https://github.com/yourusername/github-unfollow.git
+cd github-unfollow
+```
+
+**Step 2: Build the image**
+
+```bash
+docker build -t github-unfollow .
+```
+
+**Step 3: Run the container**
+
+```bash
+docker run --rm -i -e GITHUB_TOKEN=ghp_ABC123xyz github-unfollow
+```
+
+---
+
+## Get your GitHub Token
 
 1. Go to **https://github.com/settings/tokens**
 2. Click **"Generate new token"** (classic)
@@ -52,41 +131,86 @@ pip install -r requirements.txt
 5. Click "Generate token"
 6. **Copy the token immediately** (you won't see it again)
 
-### 4. Configure the script
+---
 
-Create a `.env` file in the project root:
+## Get your GitHub Token
 
+1. Go to **https://github.com/settings/tokens**
+2. Click **"Generate new token"** (classic)
+3. Give it a name (e.g., "GitHub Unfollow")
+4. Select **only** the `user:follow` scope
+5. Click "Generate token"
+6. **Copy the token immediately** (you won't see it again)
+
+---
+
+## How to Choose Your Installation Method
+
+| Method | Best For | Setup Time | Runtime | Cleanup |
+|--------|----------|-----------|---------|---------|
+| **Docker (Published)** | One-time use, no setup | ~1 sec (pull) | 25 sec | Auto (`--rm`) ✅ |
+| **Local + venv** | Development, modifications | 2 min | 25 sec | Manual (but simple) |
+| **Docker (Local build)** | Testing locally first | 1-2 min | 25 sec | Auto (`--rm`) |
+| **Docker Compose** | Team projects, CI/CD | 1 min | 25 sec | Auto |
+
+## Quick Comparison
+
+### Fastest Way (Docker Published Image)
 ```bash
-cp .env.example .env
+docker run --rm -i -e GITHUB_TOKEN=ghp_xxx venanciofuentes/github-unfollow
 ```
+✅ No install, no clone, just Docker + token = done
 
-Then edit `.env` and paste your token:
+**Docker Hub:** https://hub.docker.com/r/venanciofuentes/github-unfollow
 
-```env
-GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-```
-
-### 5. Run the script
-
+### Development Way (Local)
 ```bash
+python -m venv venv
+source venv/bin/activate  # or .\venv\Scripts\Activate.ps1 on Windows
+pip install -r requirements.txt
 python unfollow.py
 ```
+✅ Good for making changes to the code
 
-## How It Works
+---
 
+## Image Registry
+
+The published image is available on Docker Hub:
+
+### Docker Hub
+
+**Repository:** https://hub.docker.com/r/venanciofuentes/github-unfollow
+
+```bash
+docker run --rm -i -e GITHUB_TOKEN=ghp_ABC123xyz venanciofuentes/github-unfollow
 ```
-1. Activate virtual environment
-2. Script reads token from .env
-3. Fetches list of all users you follow (paginated)
-4. Shows the list and asks for confirmation
-5. Unfollows users using 4 concurrent threads
-6. Monitors API rate limit in real-time
-7. Pauses automatically if rate limit drops below 100
-8. Shows summary with success/failure stats
+
+**Pull image:**
+```bash
+docker pull venanciofuentes/github-unfollow
+```
+
+**Pull specific version:**
+```bash
+docker pull venanciofuentes/github-unfollow:v1.0
+```
+
+### Available Tags
+
+Images are typically published with these tags:
+- `latest` - Always the most recent stable version
+- `v1.0`, `v1.1`, etc. - Specific version releases
+- `v1-latest` - Latest patch for major version 1
+- `main` - Built from main branch (development)
+
+**Example using a specific version:**
+```bash
+docker run --rm -i -e GITHUB_TOKEN=ghp_xxx ghcr.io/yourusername/github-unfollow:v1.0
 ```
 
 ## Performance
-
+venanciofuentes
 | Setup | Time for 100 users | Time for 500 users |
 |-------|---|---|
 | Sequential (1 worker) | ~100 seconds | ~500 seconds |
@@ -220,17 +344,19 @@ Remaining API requests: 4958
 
 ```
 github-unfollow/
-├── venv/                    # Virtual environment (generated)
+├── venv/                    # Virtual environment (local, generated)
 ├── unfollow.py             # Main script
-├── requirements.txt        # Dependencies
-├── .env.example           # Configuration example
+├── requirements.txt        # Python dependencies
+├── Dockerfile              # Docker image definition
+├── docker-compose.yml      # Docker Compose configuration
+├── README.md              # Main documentation (this file)
+├── DOCKER_BUILD.md        # How to build and publish Docker image
+├── DOCKER_HUB_README.md   # Content for Docker Hub page
+├── .env.example           # Token configuration example
 ├── .env                   # Your configuration (local, not versioned)
 ├── .gitignore            # Git ignore file
-└── README.md             # This file
+└── .dockerignore         # Docker ignore file
 ```
-
-## FAQ
-
 **Q: Is it safe to use?**
 A: Yes. The script only needs `user:follow` permission and never deletes accounts or sensitive data. It only unfollows users you're following.
 
@@ -252,11 +378,322 @@ A: There's no built-in undo. You'll need to manually follow users again. Conside
 **Q: What permissions does the token need?**
 A: Only `user:follow`. This is the minimal security approach. Other tokens might work but this is recommended.
 
-## Requirements
+**Q: Why Alpine instead of Slim?**
+A: Alpine images are much smaller (~50MB vs ~150MB for Slim). Alpine is based on musl libc and busybox, making it ideal for lightweight containers. The tradeoff is slightly slower build time, but runtime is identical. For this script, Alpine is perfect.
 
-- Python 3.7+
-- Internet connection
-- GitHub personal access token with `user:follow` scope
+**Q: How big is the Docker image?**
+A: Only ~50MB! This makes it fast to pull and build. Compare:
+- Alpine: ~50MB ⭐ (our choice)
+- Slim: ~150MB
+- Full Python: ~300-400MB
+
+**Q: Can I use the Docker image without .env?**
+A: Yes! Pass token directly: `docker run --rm -i -e GITHUB_TOKEN=ghp_xxx github-unfollow`
+
+**Q: Is Docker safe for my token?**
+A: Yes. Environment variables are passed to the container, not stored in the image. The `-e` flag keeps it in memory only. Use `--rm` to delete the container after it exits.
+
+**Q: How do I pass my token safely in CI/CD?**
+A: Use CI/CD secrets to set environment variables:
+
+```yaml
+# GitHub Actions example
+- name: Run GitHub Unfollow
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  run: docker run --rm -i -e GITHUB_TOKEN=$GITHUB_TOKEN github-unfollow
+```
+
+## Docker
+
+### Using the Published Image (ReHub for easy access:
+
+**Docker Hub Repository:** https://hub.docker.com/r/venanciofuentes/github-unfollow
+
+```bash
+docker run --rm -i -e GITHUB_TOKEN=ghp_ABC123xyz venanciofuentes
+# Using Docker Hub
+docker run --rm -i -e GITHUB_TOKEN=ghp_ABC123xyz yourusername/github-unfollow
+```
+
+**That's it!** No cloning, no setup, no venv. Just one command.
+
+#### Different ways to use the published image:
+
+**1. With inline token:**
+```bash
+docker run --rm -i -e GITHUB_TOKEN=ghp_ABC123xyz ghcr.io/yourusername/github-unfollow
+```
+venanciofuentes/github-unfollow
+```
+
+**2. With .env file:**
+```bash
+docker run --rm -i --env-file .env venanciofuentes/github-unfollow
+```
+
+**3. With environment variable (Windows PowerShell):**
+```powershell
+$TOKEN = "ghp_ABC123xyz"
+docker run --rm -i -e GITHUB_TOKEN=$TOKEN venanciofuentes/github-unfollow
+```
+
+**4. With environment variable (Linux/macOS):**
+```bash
+TOKEN="ghp_ABC123xyz"
+docker run --rm -i -e GITHUB_TOKEN=$TOKEN venanciofuentes/github-unfollow
+```
+
+**5. Using Docker Compose (with .env file):**
+
+Create `docker-compose.yml`:
+```yaml
+version: '3.8'
+services:
+  unfollow:
+    image: venanciofuentesOKEN}
+    stdin_open: true
+    tty: true
+```
+
+Then run:
+```bash
+docker compose run --rm unfollow
+```
+
+---
+
+### Building the Image Locally
+
+If you prefer to build the image yourself:
+
+#### Step 1: Clone the repository
+
+```bash
+git clone https://github.com/yourusername/github-unfollow.git
+cd github-unfollow
+```
+
+#### Step 2: Build the image
+
+```bash
+docker build -t github-unfollow .
+
+# Or with tags
+docker build -t github-unfollow:latest -t github-unfollow:v1.0 .
+```
+
+#### Step 3: Run the container
+
+```bash
+docker run --rm -i -e GITHUB_TOKEN=ghp_ABC123xyz github-unfollow
+```
+
+---
+
+### Publishing Your Image
+
+To share your image on Docker Hub or GitHub Container Registry:
+
+#### Pushing to Docker Hub:
+
+```bash
+# Login to Docker Hub
+docker login
+
+# Tag the image
+docker tag github-unfollow venanciofuentes/github-unfollow:latest
+
+# Push to Docker Hub
+docker push venanciofuentes/github-unfollow:latest
+```
+
+To update existing tags:
+
+```bash
+# Tag with version
+docker tag github-unfollow venanciofuentes/github-unfollow:v1.0
+
+# Push
+docker push venanciofuentes/github-unfollow:v1.0
+```
+
+---
+
+## How to Build and Publish the Docker Image
+
+### Complete Workflow
+
+This is the complete process to build and publish a new version:
+
+#### 1. Update your code (if needed)
+
+Make changes to `unfollow.py`, `requirements.txt`, etc.
+
+#### 2. Build the image locally
+
+```bash
+docker build -t github-unfollow .
+```
+
+This creates a local image tagged as `github-unfollow`.
+
+#### 3. Tag the image for Docker Hub
+
+```bash
+# Tag for latest
+docker tag github-unfollow venanciofuentes/github-unfollow:latest
+
+# Tag with version
+docker tag github-unfollow venanciofuentes/github-unfollow:v1.0
+```
+
+#### 4. Login to Docker Hub
+
+```bash
+docker login
+# Enter your Docker Hub credentials
+```
+
+#### 5. Push to Docker Hub
+
+```bash
+# Push latest
+docker push venanciofuentes/github-unfollow:latest
+
+# Push version tag
+docker push venanciofuentes/github-unfollow:v1.0
+```
+
+#### 6. Verify on Docker Hub
+
+Visit https://hub.docker.com/r/venanciofuentes/github-unfollow to verify the new images are published.
+
+### Quick One-Liner (after code changes)
+
+```bash
+docker build -t github-unfollow . && \
+docker tag github-unfollow venanciofuentes/github-unfollow:latest && \
+docker tag github-unfollow venanciofuentes/github-unfollow:v1.0 && \
+docker login && \
+docker push venanciofuentes/github-unfollow:latest && \
+docker push venanciofuentes/github-unfollow:v1.0
+```
+
+### Important: Always Update Version Tags
+
+When pushing a new version, use semantic versioning:
+
+```bash
+# For bug fixes
+docker tag github-unfollow venanciofuentes/github-unfollow:v1.0.1
+docker push venanciofuentes/github-unfollow:v1.0.1
+
+# For minor features
+docker tag github-unfollow venanciofuentes/github-unfollow:v1.1.0
+docker push venanciofuentes/github-unfollow:v1.1.0
+
+# For major changes
+docker tag github-unfollow venanciofuentes/github-unfollow:v2.0.0
+docker push venanciofuentes/github-unfollow:v2.0.0
+
+# Always keep latest updated
+docker tag github-unfollow venanciofuentes/github-unfollow:latest
+docker push venanciofuentes/github-unfollow:latest
+```
+
+### What Gets Published
+
+When you push to Docker Hub, users can pull and run:
+
+```bash
+# Latest version
+docker run --rm -i -e GITHUB_TOKEN=ghp_xxx venanciofuentes/github-unfollow
+
+# Specific version
+docker run --rm -i -e GITHUB_TOKEN=ghp_xxx venanciofuentes/github-unfollow:v1.0
+
+# Development version
+docker run --rm -i -e GITHUB_TOKEN=ghp_xxx venanciofuentes/github-unfollow:main
+```
+
+---
+
+---
+
+### Docker Image Details
+
+- **Base Image:** `python:3.11-alpine` (official, secure, ultra-lightweight)
+- **Image Size:** ~50MB total (vs 150MB+ with other Python images)
+- **Workdir:** `/app`
+- **Entrypoint:** `python unfollow.py`
+- **Stdin/TTY:** Add `-it` flags for interactive prompts
+- **Cleanup:** Use `--rm` flag to auto-delete container after exit
+
+### Understanding the docker run flags
+
+```bash
+docker run --rm -i -e GITHUB_TOKEN=ghp_xxx ghcr.io/yourusername/github-unfollow
+```
+
+- `--rm` - Automatically remove container after it exits (clean up)
+- `-i` - Keep stdin open even if not attached (for interactive prompts)
+- `-t` - Allocate a pseudo-TTY (for colors in output)
+- `-e GITHUB_TOKEN=...` - Set environment variable for the token
+- `ghcr.io/yourusername/github-unfollow` - Image reference
+
+**Optional flags:**
+- `--name mycontainer` - Give container a custom name
+- `--env-file .env` - Load all environment variables from .env file
+
+**Full example with all options:**
+```bash
+docker run --rm -it -e GITHUB_TOKEN=ghp_xxx ghcr.io/yourusername/github-unfollow
+```
+
+### Quick Docker Reference
+
+| Task | Command |
+|------|---------|
+| **Use published image** | `docker run --rm -i -e GITHUB_TOKEN=ghp_xxx ghcr.io/yourusername/github-unfollow` |
+| **Build locally** | `docker build -t github-unfollow .` |
+| **Run locally built image** | `docker run --rm -i -e GITHUB_TOKEN=ghp_xxx github-unfollow` |
+| **With .env file** | `docker run --rm -i --env-file .env ghcr.io/yourusername/github-unfollow` |
+| **With Docker Compose** | `docker compose run --rm unfollow` |
+| **Pull latest version** | `docker pull ghcr.io/yourusername/github-unfollow:latest` |
+venanciofuentes/github-unfollow` |
+| **Build locally** | `docker build -t github-unfollow .` |
+| **Run locally built image** | `docker run --rm -i -e GITHUB_TOKEN=ghp_xxx github-unfollow` |
+| **With .env file** | `docker run --rm -i --env-file .env venanciofuentes/github-unfollow` |
+| **With Docker Compose** | `docker compose run --rm unfollow` |
+| **Pull latest version** | `docker pull venanciofuentes
+- 📦 **No installation** - Just Docker (works everywhere)
+- 🚀 **Ultra-fast** - Published images pull in seconds
+- 🔄 **Reproducible** - Same behavior on any system
+- 🧹 **Isolated** - Doesn't affect your system
+- 🗑️ **Auto-cleanup** - Use `--rm` to delete after done
+- 📉 **Lightweight** - Only 50MB with Alpine
+- ☁️ **Cloud-ready** - Works in GitHub Actions, CI/CD, etc.
+
+---
+
+---
+
+## Updating Docker Hub Description
+
+The file `DOCKER_HUB_README.md` contains the description to use on Docker Hub's repository page.
+
+To update the Docker Hub description:
+
+1. Go to https://hub.docker.com/r/venanciofuentes/github-unfollow
+2. Click the "Edit" button or go to Repository settings
+3. Copy the content from `DOCKER_HUB_README.md`
+4. Paste it into the "Full description" field on Docker Hub
+5. Save changes
+
+This keeps the Docker Hub page in sync with the repository documentation.
+
+---
 
 ## License
 

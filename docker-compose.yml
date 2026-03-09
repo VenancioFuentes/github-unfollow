@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  unfollow:
+    build: .
+    environment:
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+    stdin_open: true
+    tty: true
+    rm: true
