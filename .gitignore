@@ -1,0 +1,29 @@
+# Entorno virtual
+venv/
+env/
+ENV/
+.venv
+
+# Archivo de configuración con token
+.env
+.env.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
