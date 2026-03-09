@@ -104,7 +104,7 @@ python unfollow.py
 **Step 1: Clone the repository**
 
 ```bash
-git clone https://github.com/yourusername/github-unfollow.git
+git clone https://github.com/VenancioFuentes/github-unfollow.git
 cd github-unfollow
 ```
 
@@ -206,11 +206,10 @@ Images are typically published with these tags:
 
 **Example using a specific version:**
 ```bash
-docker run --rm -i -e GITHUB_TOKEN=ghp_xxx ghcr.io/yourusername/github-unfollow:v1.0
+docker run --rm -i -e GITHUB_TOKEN=ghp_xxx venanciofuentes/github-unfollow:v1.0
 ```
 
 ## Performance
-venanciofuentes
 | Setup | Time for 100 users | Time for 500 users |
 |-------|---|---|
 | Sequential (1 worker) | ~100 seconds | ~500 seconds |
@@ -406,14 +405,14 @@ A: Use CI/CD secrets to set environment variables:
 
 ## Docker
 
-### Using the Published Image (ReHub for easy access:
+### Using the Published Image (Recommended)
+
+The image is published on Docker Hub for easy access:
 
 **Docker Hub Repository:** https://hub.docker.com/r/venanciofuentes/github-unfollow
 
 ```bash
-docker run --rm -i -e GITHUB_TOKEN=ghp_ABC123xyz venanciofuentes
-# Using Docker Hub
-docker run --rm -i -e GITHUB_TOKEN=ghp_ABC123xyz yourusername/github-unfollow
+docker run --rm -i -e GITHUB_TOKEN=ghp_ABC123xyz venanciofuentes/github-unfollow
 ```
 
 **That's it!** No cloning, no setup, no venv. Just one command.
@@ -422,9 +421,7 @@ docker run --rm -i -e GITHUB_TOKEN=ghp_ABC123xyz yourusername/github-unfollow
 
 **1. With inline token:**
 ```bash
-docker run --rm -i -e GITHUB_TOKEN=ghp_ABC123xyz ghcr.io/yourusername/github-unfollow
-```
-venanciofuentes/github-unfollow
+docker run --rm -i -e GITHUB_TOKEN=ghp_ABC123xyz venanciofuentes/github-unfollow
 ```
 
 **2. With .env file:**
@@ -451,7 +448,9 @@ Create `docker-compose.yml`:
 version: '3.8'
 services:
   unfollow:
-    image: venanciofuentesOKEN}
+    image: venanciofuentes/github-unfollow
+    environment:
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
     stdin_open: true
     tty: true
 ```
@@ -470,7 +469,7 @@ If you prefer to build the image yourself:
 #### Step 1: Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/github-unfollow.git
+git clone https://github.com/VenancioFuentes/github-unfollow.git
 cd github-unfollow
 ```
 

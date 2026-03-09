@@ -120,7 +120,7 @@ GitHub API allows 5000 requests per hour. The script:
 
 ## Repository
 
-Full source code and documentation: https://github.com/yourusername/github-unfollow
+Full source code and documentation: https://github.com/VenancioFuentes/github-unfollow
 
 ## License
 
