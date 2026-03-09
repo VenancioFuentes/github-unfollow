@@ -632,14 +632,14 @@ docker run --rm -i -e GITHUB_TOKEN=ghp_xxx venanciofuentes/github-unfollow:main
 ### Understanding the docker run flags
 
 ```bash
-docker run --rm -i -e GITHUB_TOKEN=ghp_xxx ghcr.io/yourusername/github-unfollow
+docker run --rm -i -e GITHUB_TOKEN=ghp_xxx venanciofuentes/github-unfollow
 ```
 
 - `--rm` - Automatically remove container after it exits (clean up)
 - `-i` - Keep stdin open even if not attached (for interactive prompts)
 - `-t` - Allocate a pseudo-TTY (for colors in output)
 - `-e GITHUB_TOKEN=...` - Set environment variable for the token
-- `ghcr.io/yourusername/github-unfollow` - Image reference
+- `venanciofuentes/github-unfollow` - Image reference
 
 **Optional flags:**
 - `--name mycontainer` - Give container a custom name
@@ -647,25 +647,19 @@ docker run --rm -i -e GITHUB_TOKEN=ghp_xxx ghcr.io/yourusername/github-unfollow
 
 **Full example with all options:**
 ```bash
-docker run --rm -it -e GITHUB_TOKEN=ghp_xxx ghcr.io/yourusername/github-unfollow
+docker run --rm -it -e GITHUB_TOKEN=ghp_xxx venanciofuentes/github-unfollow
 ```
 
 ### Quick Docker Reference
 
 | Task | Command |
 |------|---------|
-| **Use published image** | `docker run --rm -i -e GITHUB_TOKEN=ghp_xxx ghcr.io/yourusername/github-unfollow` |
-| **Build locally** | `docker build -t github-unfollow .` |
-| **Run locally built image** | `docker run --rm -i -e GITHUB_TOKEN=ghp_xxx github-unfollow` |
-| **With .env file** | `docker run --rm -i --env-file .env ghcr.io/yourusername/github-unfollow` |
-| **With Docker Compose** | `docker compose run --rm unfollow` |
-| **Pull latest version** | `docker pull ghcr.io/yourusername/github-unfollow:latest` |
-venanciofuentes/github-unfollow` |
+| **Use published image** | `docker run --rm -i -e GITHUB_TOKEN=ghp_xxx venanciofuentes/github-unfollow` |
 | **Build locally** | `docker build -t github-unfollow .` |
 | **Run locally built image** | `docker run --rm -i -e GITHUB_TOKEN=ghp_xxx github-unfollow` |
 | **With .env file** | `docker run --rm -i --env-file .env venanciofuentes/github-unfollow` |
 | **With Docker Compose** | `docker compose run --rm unfollow` |
-| **Pull latest version** | `docker pull venanciofuentes
+| **Pull latest version** | `docker pull venanciofuentes/github-unfollow:latest` |
 - 📦 **No installation** - Just Docker (works everywhere)
 - 🚀 **Ultra-fast** - Published images pull in seconds
 - 🔄 **Reproducible** - Same behavior on any system
