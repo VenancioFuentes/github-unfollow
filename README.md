@@ -403,7 +403,16 @@ A: Use CI/CD secrets to set environment variables:
   run: docker run --rm -i -e GITHUB_TOKEN=$GITHUB_TOKEN github-unfollow
 ```
 
-## Docker
+**Q: Does it work on Raspberry Pi?**
+A: Yes! The published Docker image supports multiple architectures:
+- ✅ linux/amd64 (your PC/Mac)
+- ✅ linux/arm64 (Raspberry Pi 4/5 with 64-bit OS)
+- ✅ linux/arm/v7 (older Raspberry Pi, 32-bit)
+
+Just use the same command: `docker run --rm -i -e GITHUB_TOKEN=ghp_xxx venanciofuentes/github-unfollow`
+
+**Q: I get "no matching manifest" error on my Raspberry Pi**
+A: This means the image was built for a single architecture. If you built it yourself, use Docker Buildx to build for multiple architectures. See "Building for Multiple Architectures" section in the Docker section above for detailed instructions.
 
 ### Using the Published Image (Recommended)
 
@@ -411,11 +420,16 @@ The image is published on Docker Hub for easy access:
 
 **Docker Hub Repository:** https://hub.docker.com/r/venanciofuentes/github-unfollow
 
+**Supported Architectures:** 
+- ✅ linux/amd64 (Intel/AMD PCs, Macs)
+- ✅ linux/arm64 (Raspberry Pi 3B+, 4, 5 with 64-bit OS)
+- ✅ linux/arm/v7 (32-bit ARM devices, older Raspberry Pi)
+
 ```bash
 docker run --rm -i -e GITHUB_TOKEN=ghp_ABC123xyz venanciofuentes/github-unfollow
 ```
 
-**That's it!** No cloning, no setup, no venv. Just one command.
+**That's it!** No cloning, no setup, no venv. Just one command. Works on your PC, Mac, Raspberry Pi, or any Linux system with Docker.
 
 #### Different ways to use the published image:
 
@@ -487,6 +501,40 @@ docker build -t github-unfollow:latest -t github-unfollow:v1.0 .
 ```bash
 docker run --rm -i -e GITHUB_TOKEN=ghp_ABC123xyz github-unfollow
 ```
+
+---
+
+### Building for Multiple Architectures (Raspberry Pi Support)
+
+If you want to publish images that work on Raspberry Pi, ARM devices, and regular PCs:
+
+#### Step 1: Setup Docker Buildx (one-time)
+
+```bash
+# Create a buildx builder for multi-architecture builds
+docker buildx create --name multiarch --driver docker-container
+docker buildx use multiarch
+```
+
+#### Step 2: Build and Push Multi-Arch Image
+
+```bash
+# Build for amd64 (Intel/AMD), arm64 (Raspberry Pi 64-bit), and arm/v7 (32-bit ARM)
+docker buildx build \
+  --platform linux/amd64,linux/arm64,linux/arm/v7 \
+  -t venanciofuentes/github-unfollow:latest \
+  -t venanciofuentes/github-unfollow:v1.0 \
+  --push \
+  .
+```
+
+**That's it!** The image now works on all architectures:
+- Your PC/Mac ✅
+- Raspberry Pi 4/5 (64-bit) ✅
+- Older Raspberry Pi (32-bit) ✅
+- Any Linux system with Docker ✅
+
+For more details, see [DOCKER_BUILD.md](DOCKER_BUILD.md).
 
 ---
 
